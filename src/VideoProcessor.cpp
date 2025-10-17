@@ -78,6 +78,8 @@ void VideoProcessor::applyContourFilter(cv::Mat& image)
     cv::findContours(binary, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
     cv::Point center(binary.cols / 2, binary.rows / 2);
+    double image_area = static_cast<double>(binary.cols * binary.rows);
+    double area_limit = 0.3 * image_area;
 
     double max_area = 0.0;
     int best_index = -1;
@@ -85,7 +87,7 @@ void VideoProcessor::applyContourFilter(cv::Mat& image)
     for (size_t i = 0; i < contours.size(); ++i) {
         if (cv::pointPolygonTest(contours[i], center, false) >= 0) {
             double area = cv::contourArea(contours[i]);
-            if (area > max_area) {
+            if (area > max_area && area <= area_limit) {
                 max_area = area;
                 best_index = static_cast<int>(i);
             }
