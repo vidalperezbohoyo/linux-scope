@@ -11,12 +11,14 @@ find_package(OpenCV REQUIRED)
 file(GLOB SOURCES "src/*.cpp")
 add_executable(scope ${SOURCES})
 
+set(FBG_PATH "$ENV{HOME}/fbg")
+
 # Include paths
 target_include_directories(scope PRIVATE 
     include
     ${OpenCV_INCLUDE_DIRS}
-    ~/fbg/src/fbgraphics.h
-    ~/fbg/custom_backend/fbdev/fbg_fbdev.h
+    ${FBG_PATH}/src
+    ${FBG_PATH}/custom_backend/fbdev
 )
 
 # Link libraries
