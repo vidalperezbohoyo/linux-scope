@@ -71,7 +71,7 @@ void VideoProcessor::applyContourFilter(cv::Mat& image)
         gray = image.clone();
     }
 
-    cv::threshold(gray, binary, 127, 255, cv::THRESH_BINARY);
+    cv::threshold(gray, binary, 20, 255, cv::THRESH_BINARY);
 
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchy;
@@ -93,8 +93,6 @@ void VideoProcessor::applyContourFilter(cv::Mat& image)
             }
         }
     }
-
-    image = cv::Mat::zeros(image.size(), CV_8UC3);
 
     if (best_index >= 0) {
         cv::drawContours(image, contours, best_index, cv::Scalar(0, 255, 0), 2);
