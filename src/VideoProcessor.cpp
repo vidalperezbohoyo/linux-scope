@@ -27,7 +27,8 @@ void VideoProcessor::onImage(const cv::Mat& frame)
     cv::Mat processed = frame.clone();
 
     // Apply processing steps
-    applyEdgeDetection(processed);
+    //applyEdgeDetection(processed);
+    applyContourFilter(processed);
 
     // Call the image callback if set
     if (imageCallback_)
@@ -59,6 +60,44 @@ void VideoProcessor::applyEdgeDetection(cv::Mat& frame, double threshold1, doubl
     cv::cvtColor(edges, frame, cv::COLOR_GRAY2BGR);
 }
 
+void VideoProcessor::applyContourFilter(cv::Mat& image)
+{
+    if (image.empty()) return;
+
+    cv::Mat gray, binary;
+    if (image.channels() == 3) {
+        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    } else {
+        gray = image.clone();
+    }
+
+    cv::threshold(gray, binary, 127, 255, cv::THRESH_BINARY);
+
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    cv::findContours(binary, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    cv::Point center(binary.cols / 2, binary.rows / 2);
+
+    double max_area = 0.0;
+    int best_index = -1;
+
+    for (size_t i = 0; i < contours.size(); ++i) {
+        if (cv::pointPolygonTest(contours[i], center, false) >= 0) {
+            double area = cv::contourArea(contours[i]);
+            if (area > max_area) {
+                max_area = area;
+                best_index = static_cast<int>(i);
+            }
+        }
+    }
+
+    image = cv::Mat::zeros(image.size(), CV_8UC3);
+
+    if (best_index >= 0) {
+        cv::drawContours(image, contours, best_index, cv::Scalar(0, 255, 0), 2);
+    }
+}
 
 /*
 void VideoProcessor::applyGaussianBlur(cv::Mat& frame, int kernelSize)
