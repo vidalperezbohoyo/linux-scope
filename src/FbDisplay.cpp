@@ -2,7 +2,7 @@
 
 bool FbDisplay::init()
 {
-   fbg_ = fbg_fbdevSetup(DEVICE_PATH.c_str(), 0); 
+   fbg_ = fbg_fbdevSetup((char*)DEVICE_PATH.c_str(), 0); 
    return fbg_ != nullptr; 
 }
 
@@ -11,8 +11,8 @@ void FbDisplay::draw(const cv::Mat& frame)
     uint8_t* buffer = nullptr;
 
     cv::Mat resized;
-    resize(frame, resized, Size(fbg_->width, fbg_->height));
-    cvtColor(resized, resized, COLOR_BGR2RGB);
+    cv::resize(frame, resized, cv::Size(fbg_->width, fbg_->height));
+    cv::cvtColor(resized, resized, cv::COLOR_BGR2RGB);
 
     // Convert to PNG
     std::vector<uint8_t> png_vec;
@@ -31,18 +31,18 @@ void FbDisplay::draw(const cv::Mat& frame)
     std::memcpy(buffer, png_vec.data(), buf_size);
 
     // Load image into FBG
-    struct _fbg_img* img = fbg_loadImageFromMemory(fbg, buffer, buf_size);
+    struct _fbg_img* img = fbg_loadImageFromMemory(fbg_, buffer, buf_size);
     if (!img) 
     {
         std::cerr << "[ERROR] Could not load image into FBG" << std::endl;
-        continue;
+        return;
     }
         
-    fbg_imageClip(fbg, img, 0, 0, 0, 0, fbg->width, fbg->height);
+    fbg_imageClip(fbg_, img, 0, 0, 0, 0, fbg_->width, fbg_->height);
 
-    fbg_flip(fbg); // I don't know if this is necessary here
+    fbg_flip(fbg_); // I don't know if this is necessary here
 
-    fbg_draw(fbg);
+    fbg_draw(fbg_);
 
     // Free resources
     fbg_freeImage(img);
@@ -52,5 +52,5 @@ void FbDisplay::draw(const cv::Mat& frame)
 void FbDisplay::clear()
 {
    fbg_clear(fbg_);
-   fbg_draw(fbg); 
+   fbg_draw(fbg_); 
 }
