@@ -4,6 +4,9 @@ VideoProcessor::VideoProcessor()
 {
     zoom_ = 4; // No zoom
     brightness_percent_ = 100; // No brightness adjustment
+
+    zoom_x_offset_ = 0;
+    zoom_y_offset_ = 0;
 }
 
 VideoProcessor::~VideoProcessor()
@@ -43,6 +46,12 @@ void VideoProcessor::onImage(const cv::Mat& frame)
     {
         imageCallback_(processed);
     }
+}
+
+void VideoProcessor::setZoomOffset(const int& x_offset, const int& y_offset)
+{
+    zoom_x_offset_ = x_offset;
+    zoom_y_offset_ = y_offset;
 }
 
 void VideoProcessor::resizeFrame(cv::Mat& frame, int size_x, int size_y)
@@ -87,8 +96,8 @@ void VideoProcessor::applyZoom(cv::Mat& frame)
     int new_width = static_cast<int>(width / zoom_);
     int new_height = static_cast<int>(height / zoom_);
 
-    int center_x = width / 2;
-    int center_y = height / 2;
+    int center_x = (width / 2) + zoom_x_offset_;
+    int center_y = (height / 2) + zoom_y_offset_;
 
     int x = std::max(0, center_x - new_width / 2);
     int y = std::max(0, center_y - new_height / 2);

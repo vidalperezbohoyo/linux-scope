@@ -15,6 +15,7 @@ public:
     // Methods to adjust video from HUD class
     void setZoom(uint8_t zoom);
     void setBrightness(uint8_t brightness_percent);
+    void setZoomOffset(const int& x_offset, const int& y_offset);
 
 private:
     void onImage(const cv::Mat& frame) override;
@@ -53,5 +54,9 @@ private:
     std::function<void(const cv::Mat&)> imageCallback_;
 
     uint8_t zoom_;
+    int zoom_x_offset_;
+    int zoom_y_offset_;
+
+
     uint8_t brightness_percent_;
 };
