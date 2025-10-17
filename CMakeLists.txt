@@ -27,7 +27,7 @@ target_link_libraries(scope
 
 # Compiler options
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(opti PRIVATE -Wall -Wextra -O2)
+    target_compile_options(scope PRIVATE -Wall -Wextra -O2)
 endif()
 
 # Build types
