@@ -1,6 +1,6 @@
 #include "VideoProcessor.h"
 
-VideoProcessor::VideoProcessor() : m_detectorLoaded(false)
+VideoProcessor::VideoProcessor()
 {
     // Try to load a default object detector (face detector)
     // Note: You'll need to provide the path to the cascade file
@@ -16,7 +16,12 @@ bool VideoProcessor::init()
     return VideoProvider::init();
 }
 
-void VideoProcessor::onFrame(cv::Mat& frame)
+void VideoProcessor::setImageCallback(std::function<void(const cv::Mat&)> callback)
+{
+    imageCallback_ = callback;
+}
+
+void VideoProcessor::onImage(const cv::Mat& frame)
 {
     // Example processing pipeline
     // applyGaussianBlur(frame);
@@ -31,6 +36,12 @@ void VideoProcessor::onFrame(cv::Mat& frame)
     auto objects = detectObjects(frame);
     trackObjects(frame, objects);
     */
+
+    // Call the image callback if set
+    if (imageCallback_)
+    {
+        imageCallback_(frame);
+    }
 }
 
 /*

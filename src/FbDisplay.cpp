@@ -1,12 +1,5 @@
 #include "FbDisplay.h"
 
-FbDisplay::FbDisplay()
-{
-}
-FbDisplay::~FbDisplay()
-{
-}
-
 bool FbDisplay::init()
 {
     

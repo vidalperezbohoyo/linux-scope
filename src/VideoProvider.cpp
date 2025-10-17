@@ -25,7 +25,7 @@ void VideoProvider::loop()
 
 bool VideoProvider::init()
 {
-    cap.release();
+    cap_.release();
     cap_.open("/dev/video0");
-    return m_capture.isOpened();
+    return cap_.isOpened();
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "BaseDisplay.h"
 
 class FbDisplay : public BaseDisplay
 {

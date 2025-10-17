@@ -1,7 +1,6 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
-#include <vector>
+#include "VideoProvider.h"
 
 class VideoProcessor : public VideoProvider
 {
@@ -9,8 +8,14 @@ public:
     VideoProcessor();
     ~VideoProcessor();
 
+    bool init();
+
+    void setImageCallback(std::function<void(const cv::Mat&)> callback);
+
+
 private:
-    void onFrame(cv::Mat& frame); 
+    void onImage(const cv::Mat& frame) override; 
+
 
     /*
     // Basic image processing operations
@@ -31,4 +36,6 @@ private:
     // Apply custom filter
     void applyCustomKernel(cv::Mat& frame, const cv::Mat& kernel);
     */
+private:
+    std::function<void(const cv::Mat&)> imageCallback_;
 };

@@ -2,6 +2,8 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 
+#include "Thread.h"
+
 class VideoProvider : public Thread
 {
 public:

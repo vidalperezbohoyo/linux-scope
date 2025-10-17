@@ -4,8 +4,8 @@
 #include "VideoProcessor.h"
 
 // Select display type
-#define USE_OPENCV_DISPLAY 1
-#define USE_FB_DISPLAY 0
+#define USE_OPENCV_DISPLAY 0
+#define USE_FB_DISPLAY 1
 
 #if USE_OPENCV_DISPLAY
     #include "CvDisplay.h"
