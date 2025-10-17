@@ -24,7 +24,7 @@ target_include_directories(scope PRIVATE
 # Link libraries
 target_link_libraries(scope 
     ${OpenCV_LIBS}
-    ~/fbg/lib/lib.a
+    ${FBG_PATH}/lib/lib.a
 )
 
 # Compiler options
