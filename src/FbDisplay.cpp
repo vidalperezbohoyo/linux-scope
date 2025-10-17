@@ -51,6 +51,6 @@ void FbDisplay::draw(const cv::Mat& frame)
 
 void FbDisplay::clear()
 {
-   fbg_clear(fbg_);
+   fbg_clear(fbg_, 0);
    fbg_draw(fbg_); 
 }
