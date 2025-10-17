@@ -2,7 +2,7 @@
 
 bool FbDisplay::init()
 {
-   fbg_ = fbg_fbdevSetup((char*)DEVICE_PATH.c_str(), 0); 
+   fbg_ = fbg_fbdevSetup("/dev/fb1", 0); 
    return fbg_ != nullptr; 
 }
 
