@@ -56,12 +56,12 @@ void VideoProcessor::applyZoom(cv::Mat& frame)
 
 void VideoProcessor::applyBrightness(cv::Mat& frame)
 {
-    if (image.empty()) return;
+    if (frame.empty()) return;
 
-    brightness = std::clamp(brightness, 0, 100);
-    double factor = brightness / 100.0;
+    brightness_percent_ = std::clamp(brightness_percent_, 0, 100);
+    double factor = brightness_percent_ / 100.0;
 
-    image.convertTo(image, -1, factor, 0); // alpha = factor, beta = 0
+    frame.convertTo(frame, -1, factor, 0); // alpha = factor, beta = 0
 }
 
 /*
