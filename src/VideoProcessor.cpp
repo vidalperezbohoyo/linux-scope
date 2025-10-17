@@ -2,9 +2,8 @@
 
 VideoProcessor::VideoProcessor()
 {
-    // Try to load a default object detector (face detector)
-    // Note: You'll need to provide the path to the cascade file
-    // m_detectorLoaded = m_objectDetector.load("haarcascade_frontalface_alt.xml");
+    zoom_ = 2; // No zoom
+    brightness_percent_ = 20; // No brightness adjustment
 }
 
 VideoProcessor::~VideoProcessor()
@@ -26,9 +25,11 @@ void VideoProcessor::onImage(const cv::Mat& frame)
     // Copy image
     cv::Mat processed = frame.clone();
 
-    // Apply processing steps
-    //applyEdgeDetection(processed);
-    applyContourFilter(processed);
+    // Apply zoom
+    applyZoom(processed);
+
+    // Apply brightness adjustment
+    applyBrightness(processed);
 
     // Call the image callback if set
     if (imageCallback_)
@@ -37,6 +38,33 @@ void VideoProcessor::onImage(const cv::Mat& frame)
     }
 }
 
+void VideoProcessor::applyZoom(cv::Mat& frame)
+{
+    if (zoom_ <= 1) return; // No zoom
+
+    int centerX = frame.cols / 2;
+    int centerY = frame.rows / 2;
+    int newWidth = frame.cols / zoom_;
+    int newHeight = frame.rows / zoom_;
+
+    cv::Rect roi(centerX - newWidth / 2, centerY - newHeight / 2, newWidth, newHeight);
+    roi &= cv::Rect(0, 0, frame.cols, frame.rows); // Ensure ROI is within bounds
+
+    cv::Mat zoomed = frame(roi);
+    cv::resize(zoomed, frame, frame.size());
+}
+
+void VideoProcessor::applyBrightness(cv::Mat& frame)
+{
+    if (brightness_percent_ == 0) return; // No adjustment
+
+    double alpha = 1.0; // Contrast control (1.0-3.0)
+    int beta = static_cast<int>(brightness_percent_ * 255 / 100); // Brightness control (0-255)
+
+    frame.convertTo(frame, -1, alpha, beta);
+}
+
+/*
 void VideoProcessor::applyEdgeDetection(cv::Mat& frame, double threshold1, double threshold2)
 {
     if (frame.empty()) return;
@@ -99,7 +127,6 @@ void VideoProcessor::applyContourFilter(cv::Mat& image)
     }
 }
 
-/*
 void VideoProcessor::applyGaussianBlur(cv::Mat& frame, int kernelSize)
 {
     if (frame.empty()) return;

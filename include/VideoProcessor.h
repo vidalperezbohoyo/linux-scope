@@ -12,13 +12,20 @@ public:
 
     void setImageCallback(std::function<void(const cv::Mat&)> callback);
 
+    // Methods to adjust video from HUD class
+    void setZoom(uint8_t zoom);
+    void setBrightness(uint8_t brightness_percent);
 
 private:
     void onImage(const cv::Mat& frame) override; 
 
-    void applyEdgeDetection(cv::Mat& frame, double threshold1 = 100, double threshold2 = 200);
+    void applyZoom(cv::Mat& frame);
 
-    void applyContourFilter(cv::Mat& image);
+    void applyBrightness(cv::Mat& frame);
+
+    //void applyEdgeDetection(cv::Mat& frame, double threshold1 = 100, double threshold2 = 200);
+
+    //void applyContourFilter(cv::Mat& image);
     /*
     // Basic image processing operations
     void applyGaussianBlur(cv::Mat& frame, int kernelSize = 15);
@@ -40,4 +47,7 @@ private:
     */
 private:
     std::function<void(const cv::Mat&)> imageCallback_;
+
+    uint8_t zoom_;
+    uint8_t brightness_percent_;
 };
