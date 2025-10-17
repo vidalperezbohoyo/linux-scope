@@ -11,6 +11,11 @@ VideoProcessor::~VideoProcessor()
 {
 }
 
+bool VideoProcessor::init()
+{
+    return VideoProvider::init();
+}
+
 void VideoProcessor::onFrame(cv::Mat& frame)
 {
     // Example processing pipeline
