@@ -2,8 +2,8 @@
 
 VideoProcessor::VideoProcessor()
 {
-    zoom_ = 2; // No zoom
-    brightness_percent_ = 20; // No brightness adjustment
+    zoom_ = 3; // No zoom
+    brightness_percent_ = 100; // No brightness adjustment
 }
 
 VideoProcessor::~VideoProcessor()
@@ -28,14 +28,28 @@ void VideoProcessor::onImage(const cv::Mat& frame)
     // Apply zoom
     applyZoom(processed);
 
+    applyCrosshair(processed);
+
     // Apply brightness adjustment
     applyBrightness(processed);
+
 
     // Call the image callback if set
     if (imageCallback_)
     {
         imageCallback_(processed);
     }
+}
+
+void VideoProcessor::applyCrosshair(cv::Mat& frame)
+{
+    if (frame.empty()) return;
+
+    int cx = frame.cols / 2;
+    int cy = frame.rows / 2;
+
+    cv::line(frame, cv::Point(0, cy), cv::Point(frame.cols, cy), cv::Scalar(0, 0, 0), 1);
+    cv::line(frame, cv::Point(cx, 0), cv::Point(cx, frame.rows), cv::Scalar(0, 0, 0), 1);
 }
 
 void VideoProcessor::applyZoom(cv::Mat& frame)
@@ -60,6 +74,8 @@ void VideoProcessor::applyZoom(cv::Mat& frame)
 
     cv::Rect roi(x, y, new_width, new_height);
     cv::Mat cropped = frame(roi);
+
+    frame = cropped.clone();
 }
 
 void VideoProcessor::applyBrightness(cv::Mat& frame)

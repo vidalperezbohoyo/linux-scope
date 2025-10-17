@@ -19,6 +19,8 @@ public:
 private:
     void onImage(const cv::Mat& frame) override; 
 
+    void applyCrosshair(cv::Mat& frame);
+
     void applyZoom(cv::Mat& frame);
 
     void applyBrightness(cv::Mat& frame);

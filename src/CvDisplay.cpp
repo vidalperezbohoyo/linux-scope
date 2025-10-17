@@ -17,8 +17,10 @@ bool CvDisplay::init()
 }
 
 void CvDisplay::draw(const cv::Mat& frame)
-{
-    cv::imshow("Video", frame);
+{   
+    cv::Mat resized;
+    cv::resize(frame, resized, cv::Size(240, 240));
+    cv::imshow("Video", resized);
     cv::waitKey(1); // Needed to update the window
 }
 

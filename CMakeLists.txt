@@ -35,7 +35,7 @@ if(EXISTS "${FBG_PATH}")
     )
 
     # Define macro for FG display
-    target_compile_definitions(scope PRIVATE USE_FG_DISPLAY)
+    target_compile_definitions(scope PRIVATE USE_FB_DISPLAY)
 
 else()
 
