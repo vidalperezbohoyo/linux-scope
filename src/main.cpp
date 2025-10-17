@@ -1,10 +1,6 @@
-#include <iostream>
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
-
 #include "VideoProvider.h"
 #include "VideoProcessor.h"
+#include "KeyboardController.h"
 
 #ifdef USE_CV_DISPLAY
     #include "CvDisplay.h"
@@ -30,7 +26,6 @@ void setNonBlockingInput(bool enable) {
 
 int main() 
 {
-
     setNonBlockingInput(true);
 
 #ifdef USE_CV_DISPLAY
@@ -61,29 +56,20 @@ int main()
 
     processor.start();
 
-    int zoom_offset_x = 0;
-    int zoom_offset_y = 0;
-    while(true)
+    KeyboardController controller;
+    controller.setKeyEventCallback([&processor](KeyEvent event) 
     {
-        uint8_t ch = getchar();
-        if (ch == 27) { // ESC
-            char next1 = getchar();
-            if (next1 == 91) { // '['
-                char next2 = getchar();
-                switch (next2) {
-                    case 'A': std::cout << "↑\n"; zoom_offset_y--; break;
-                    case 'B': std::cout << "↓\n"; zoom_offset_y++;break;
-                    case 'C': std::cout << "→\n"; zoom_offset_x++;break;
-                    case 'D': std::cout << "←\n"; zoom_offset_x--;break;
-                }
-                processor.setZoomOffset(zoom_offset_x, zoom_offset_y); // Reset offsets on arrow key press
-            }
-        } else if (ch == 'q') {
-            std::cout << "Exit...\n";
-            break;
+        int zoom_offset_x = 0;
+        int zoom_offset_y = 0;
+
+        if (event == KeyEvent::QUIT) 
+        {
+            processor.stop();
         }
-        usleep(100); // Para no saturar la CPU
-    }
+    });
+    controller.start();
+
+    while(true) {usleep(100000);}
 
     return 0;
 }
