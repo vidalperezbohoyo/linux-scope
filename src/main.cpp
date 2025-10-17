@@ -40,6 +40,8 @@ int main()
         display.draw(frame);
     });
 
+    processor.start();
+
     while(true);
 
     return 0;
