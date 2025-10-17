@@ -56,12 +56,12 @@ void VideoProcessor::applyZoom(cv::Mat& frame)
 
 void VideoProcessor::applyBrightness(cv::Mat& frame)
 {
-    if (brightness_percent_ == 0) return; // No adjustment
+    if (image.empty()) return;
 
-    double alpha = 1.0; // Contrast control (1.0-3.0)
-    int beta = static_cast<int>(brightness_percent_ * 255 / 100); // Brightness control (0-255)
+    brightness = std::clamp(brightness, 0, 100);
+    double factor = brightness / 100.0;
 
-    frame.convertTo(frame, -1, alpha, beta);
+    image.convertTo(image, -1, factor, 0); // alpha = factor, beta = 0
 }
 
 /*
