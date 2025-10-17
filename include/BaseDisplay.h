@@ -12,5 +12,5 @@ public:
     
     virtual void draw(const cv::Mat& frame) = 0;
 
-    virtual void clear() = 0; 
+    virtual void clear() = 0;
 };

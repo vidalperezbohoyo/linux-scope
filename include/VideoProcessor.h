@@ -17,7 +17,9 @@ public:
     void setBrightness(uint8_t brightness_percent);
 
 private:
-    void onImage(const cv::Mat& frame) override; 
+    void onImage(const cv::Mat& frame) override;
+    
+    void resizeFrame(cv::Mat& frame, int size_x, int size_y);
 
     void applyCrosshair(cv::Mat& frame);
 

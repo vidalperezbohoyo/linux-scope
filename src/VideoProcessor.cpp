@@ -2,7 +2,7 @@
 
 VideoProcessor::VideoProcessor()
 {
-    zoom_ = 3; // No zoom
+    zoom_ = 4; // No zoom
     brightness_percent_ = 100; // No brightness adjustment
 }
 
@@ -28,11 +28,15 @@ void VideoProcessor::onImage(const cv::Mat& frame)
     // Apply zoom
     applyZoom(processed);
 
-    applyCrosshair(processed);
+    
 
     // Apply brightness adjustment
     applyBrightness(processed);
 
+    // Output frame
+    resizeFrame(processed, 240, 240);
+
+    applyCrosshair(processed);
 
     // Call the image callback if set
     if (imageCallback_)
@@ -40,6 +44,27 @@ void VideoProcessor::onImage(const cv::Mat& frame)
         imageCallback_(processed);
     }
 }
+
+void VideoProcessor::resizeFrame(cv::Mat& frame, int size_x, int size_y)
+{
+    // Calculate scale to maintain aspect ratio
+    double scale = std::max(
+        static_cast<double>(size_x) / frame.cols,
+        static_cast<double>(size_y) / frame.rows
+    );
+
+    // Resize while keeping aspect ratio
+    cv::Mat scaled;
+    cv::resize(frame, scaled, cv::Size(), scale, scale, cv::INTER_LINEAR);
+
+    // Center crop to target size
+    int x = (scaled.cols - size_x) / 2;
+    int y = (scaled.rows - size_y) / 2;
+    cv::Rect crop_roi(x, y, size_x, size_y);
+
+    frame = scaled(crop_roi).clone();
+}
+
 
 void VideoProcessor::applyCrosshair(cv::Mat& frame)
 {
