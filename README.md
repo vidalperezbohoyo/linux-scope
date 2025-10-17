@@ -1,5 +1,11 @@
 # linux-scope
 A embeeded linux sniper scope with several cool features.
 
-## Dependencies
-Depends on: fbg_cpp_wrapper
+## Compilation
+Clone **fbg** library:
+
+Generate static library:
+
+Clone this project:
+
+Compile it:
