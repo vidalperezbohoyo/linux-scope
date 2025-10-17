@@ -40,7 +40,7 @@ void VideoProcessor::onImage(const cv::Mat& frame)
 
 void VideoProcessor::applyZoom(cv::Mat& frame)
 {
-    if (frame.empty() || zoom_ <= 1.0) return;
+    if (frame.empty() || zoom_ <= 1) return;
 
     int width = frame.cols;
     int height = frame.rows;
@@ -60,9 +60,6 @@ void VideoProcessor::applyZoom(cv::Mat& frame)
 
     cv::Rect roi(x, y, new_width, new_height);
     cv::Mat cropped = frame(roi);
-
-    // Resize with interpolation to avoid visual artifacts
-    cv::resize(cropped, frame, frame.size(), 0, 0, cv::INTER_LINEAR);
 }
 
 void VideoProcessor::applyBrightness(cv::Mat& frame)
