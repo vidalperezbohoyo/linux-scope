@@ -40,25 +40,36 @@ void VideoProcessor::onImage(const cv::Mat& frame)
 
 void VideoProcessor::applyZoom(cv::Mat& frame)
 {
-    if (zoom_ <= 1) return; // No zoom
+    if (frame.empty() || zoom_ <= 1.0) return;
 
-    int centerX = frame.cols / 2;
-    int centerY = frame.rows / 2;
-    int newWidth = frame.cols / zoom_;
-    int newHeight = frame.rows / zoom_;
+    int width = frame.cols;
+    int height = frame.rows;
 
-    cv::Rect roi(centerX - newWidth / 2, centerY - newHeight / 2, newWidth, newHeight);
-    roi &= cv::Rect(0, 0, frame.cols, frame.rows); // Ensure ROI is within bounds
+    int new_width = static_cast<int>(width / zoom_);
+    int new_height = static_cast<int>(height / zoom_);
 
-    cv::Mat zoomed = frame(roi);
-    cv::resize(zoomed, frame, frame.size());
+    int center_x = width / 2;
+    int center_y = height / 2;
+
+    int x = std::max(0, center_x - new_width / 2);
+    int y = std::max(0, center_y - new_height / 2);
+
+    // Ensure ROI stays within bounds
+    new_width = std::min(new_width, width - x);
+    new_height = std::min(new_height, height - y);
+
+    cv::Rect roi(x, y, new_width, new_height);
+    cv::Mat cropped = frame(roi);
+
+    // Resize with interpolation to avoid visual artifacts
+    cv::resize(cropped, frame, frame.size(), 0, 0, cv::INTER_LINEAR);
 }
 
 void VideoProcessor::applyBrightness(cv::Mat& frame)
 {
     if (frame.empty()) return;
 
-    brightness_percent_ = std::clamp(brightness_percent_, 0, 100);
+    brightness_percent_ = std::clamp(brightness_percent_, (uint8_t)0, (uint8_t)100);
     double factor = brightness_percent_ / 100.0;
 
     frame.convertTo(frame, -1, factor, 0); // alpha = factor, beta = 0

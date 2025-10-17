@@ -1,12 +1,12 @@
 #pragma once
 #include "BaseDisplay.h"
 
-class FbDisplay : public BaseDisplay
+class CvDisplay : public BaseDisplay
 {
 
 public:
-    FbDisplay();
-    ~FbDisplay();
+    CvDisplay();
+    ~CvDisplay();
     
     bool init() override;
     

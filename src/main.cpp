@@ -3,22 +3,22 @@
 #include "VideoProvider.h"
 #include "VideoProcessor.h"
 
-// Select display type
-#define USE_OPENCV_DISPLAY 0
-#define USE_FB_DISPLAY 1
-
-#if USE_OPENCV_DISPLAY
+#ifdef USE_CV_DISPLAY
     #include "CvDisplay.h"
-#elif USE_FB_DISPLAY
+#endif
+
+#ifdef USE_FB_DISPLAY
     #include "FbDisplay.h"
 #endif
 
 
 int main() 
 {
-#if USE_OPENCV_DISPLAY
+#ifdef USE_CV_DISPLAY
     CvDisplay display;
-#elif USE_FB_DISPLAY
+#endif
+
+#ifdef USE_FB_DISPLAY
     FbDisplay display;
 #endif
 
