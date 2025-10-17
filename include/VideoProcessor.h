@@ -16,7 +16,7 @@ public:
 private:
     void onImage(const cv::Mat& frame) override; 
 
-
+    void applyEdgeDetection(cv::Mat& frame, double threshold1 = 100, double threshold2 = 200);
     /*
     // Basic image processing operations
     void applyGaussianBlur(cv::Mat& frame, int kernelSize = 15);

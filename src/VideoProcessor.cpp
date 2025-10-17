@@ -23,26 +23,42 @@ void VideoProcessor::setImageCallback(std::function<void(const cv::Mat&)> callba
 
 void VideoProcessor::onImage(const cv::Mat& frame)
 {
-    // Example processing pipeline
-    // applyGaussianBlur(frame);
-    // applyGrayscale(frame);
-    // applyEdgeDetection(frame);
-    // adjustBrightnessContrast(frame, 1.2, 20);
-    // equalizeHistogram(frame);
-    // reduceNoise(frame);
-    
-    // Object detection and tracking
-    /*
-    auto objects = detectObjects(frame);
-    trackObjects(frame, objects);
-    */
+    // Copy image
+    cv::Mat processed = frame.clone();
+
+    // Apply processing steps
+    applyEdgeDetection(processed);
 
     // Call the image callback if set
     if (imageCallback_)
     {
-        imageCallback_(frame);
+        imageCallback_(processed);
     }
 }
+
+void VideoProcessor::applyEdgeDetection(cv::Mat& frame, double threshold1, double threshold2)
+{
+    if (frame.empty()) return;
+    
+    cv::Mat gray, edges;
+    
+    // Convert to grayscale
+    if (frame.channels() == 3)
+    {
+        cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+    }
+    else
+    {
+        gray = frame.clone();
+    }
+    
+    // Apply Canny edge detection
+    cv::Canny(gray, edges, threshold1, threshold2);
+    
+    // Convert back to 3 channels
+    cv::cvtColor(edges, frame, cv::COLOR_GRAY2BGR);
+}
+
 
 /*
 void VideoProcessor::applyGaussianBlur(cv::Mat& frame, int kernelSize)
