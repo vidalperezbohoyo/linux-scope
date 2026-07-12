@@ -1,0 +1,3 @@
+/home/vidi/Documentos/linux-scope/linux-scope/build/CMakeFiles/scope.dir
+/home/vidi/Documentos/linux-scope/linux-scope/build/CMakeFiles/edit_cache.dir
+/home/vidi/Documentos/linux-scope/linux-scope/build/CMakeFiles/rebuild_cache.dir
