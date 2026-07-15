@@ -46,7 +46,7 @@ A:
 		width = <240>;
 		height = <240>;
 		rotate = <0>;
-		fps = <50>;
+		fps = <75>;
 		bgr;
 
 		init = <
@@ -147,8 +147,14 @@ El programa de `linux-scope` se compila en tu propio PC (no en el Luckfox), haci
 
 
 ## Configure SC3336 camera 
+Creo que es mejor tener muchos más fps, por encima de mas calidad/zoom y optico. Al fin y al cabo queremos ver como si fuera una mira convencional, sin delay.  
+Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-pico/issues/67 para hacerlo antes de generar la imagen.
+
+1. Substituye `sc3336_CMK-OT2119-PC1_30IRC-F16.json` dela ruta `/luckfox-pico/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/` por `sc3336_CMK-OT2119-PC1_30IRC-F16.json`
 
 ## Generar la imagen
+
+
 
 ### Problems with CMake version
 Yo tenia instalado en mi Ubuntu22.04 cmake=4.4.0, eso daba conflicto con el SDK, que espera una version inferior.
@@ -163,3 +169,9 @@ cmake --version
 ```
 
 ## Flashear la imagen en la memoria interna de la placa
+
+
+## Run program
+
+### This is a program that raises and prepare camera at start but uses the camera so must be killed
+killall rkipc

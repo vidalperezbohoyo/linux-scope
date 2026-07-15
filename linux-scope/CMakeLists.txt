@@ -45,9 +45,6 @@ add_executable(scope
     src/UserInput/KeyboardController.cpp
     
     src/Utility/Thread.cpp
-    
-    src/Display/HUD.cpp
-    src/Display/VideoProcessor.cpp
 )
 
 if (BUILD_X86)
@@ -58,6 +55,40 @@ elseif (BUILD_LUCKFOX_PICO)
     target_sources(scope PRIVATE
         src/Display/FbDisplay.cpp
     )
+
+    add_executable(test_luckfox_display 
+        src/test/test_luckfox_display.cpp
+        src/Display/FbDisplay.cpp
+    )
+    add_executable(test_luckfox_camera_fps
+        src/test/test_luckfox_camera_fps.cpp
+        src/Camera/VideoProvider.cpp
+        src/Utility/Thread.cpp
+    )
+    add_executable(test_luckfox_camera_to_display
+        src/test/test_luckfox_camera_to_display.cpp
+        src/Camera/VideoProvider.cpp
+        src/Display/FbDisplay.cpp
+        src/Utility/Thread.cpp
+    )
+
+    target_include_directories(test_luckfox_display PRIVATE 
+        include
+        ${OpenCV_INCLUDE_DIRS}
+    )
+    target_include_directories(test_luckfox_camera_fps PRIVATE 
+        include
+        ${OpenCV_INCLUDE_DIRS}
+    )
+    target_include_directories(test_luckfox_camera_to_display PRIVATE 
+        include
+        ${OpenCV_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(test_luckfox_display ${OpenCV_LIBS})
+    target_link_libraries(test_luckfox_camera_fps ${OpenCV_LIBS})
+    target_link_libraries(test_luckfox_camera_to_display ${OpenCV_LIBS})
+
 endif()
 
 target_include_directories(scope PRIVATE 

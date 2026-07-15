@@ -1,5 +1,4 @@
 #include "Camera/VideoProvider.h"
-#include "Display/VideoProcessor.h"
 #include "UserInput/KeyboardController.h"
 #include "Display/HUD.h"
 #include "Utility/Log.h"

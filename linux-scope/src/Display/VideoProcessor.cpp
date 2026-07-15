@@ -23,32 +23,32 @@ void VideoProcessor::setImageCallback(std::function<void(const cv::Mat&)> callba
     imageCallback_ = callback;
 }
 
-void VideoProcessor::onImage(const cv::Mat& frame)
-{
-    // Copy image
-    cv::Mat processed = frame.clone();
+// void VideoProcessor::onImage(const cv::Mat& frame)
+// {
+//     // Copy image
+//     cv::Mat processed = frame.clone();
 
-    // Apply zoom
-    applyZoom(processed);
+//     // Apply zoom
+//     applyZoom(processed);
 
     
 
-    // Apply brightness adjustment
-    applyBrightness(processed);
+//     // Apply brightness adjustment
+//     applyBrightness(processed);
 
-    // Output frame
-    resizeFrame(processed, 240, 240);
+//     // Output frame
+//     resizeFrame(processed, 240, 240);
 
-    applyCrosshair(processed);
+//     applyCrosshair(processed);
 
-    applyRoundFilter(processed);
+//     applyRoundFilter(processed);
 
-    // Call the image callback if set
-    if (imageCallback_)
-    {
-        imageCallback_(processed);
-    }
-}
+//     // Call the image callback if set
+//     if (imageCallback_)
+//     {
+//         imageCallback_(processed);
+//     }
+// }
 
 void VideoProcessor::setZoomOffset(const int& x_offset, const int& y_offset)
 {

@@ -14,7 +14,10 @@ void VideoProvider::loop()
     cv::Mat frame;
     cap_ >> frame;
    
-    onImage(frame);
+    if (!frame.empty() && image_callback_)
+    {
+        image_callback_(frame);
+    }
 }
 
 bool VideoProvider::init()
@@ -23,3 +26,10 @@ bool VideoProvider::init()
     cap_.open(0);
     return cap_.isOpened();
 }
+
+void VideoProvider::setImageCallback(std::function<void(const cv::Mat&)> callback)
+{
+    image_callback_ = callback;
+}
+
+

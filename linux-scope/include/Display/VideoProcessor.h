@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Camera/VideoProvider.h"
-
-class VideoProcessor : public VideoProvider
+class VideoProcessor
 {
 public:
     VideoProcessor();
@@ -18,8 +16,7 @@ public:
     void setZoomOffset(const int& x_offset, const int& y_offset);
 
 private:
-    void onImage(const cv::Mat& frame) override;
-    
+
     void resizeFrame(cv::Mat& frame, int size_x, int size_y);
 
     void applyCrosshair(cv::Mat& frame);
