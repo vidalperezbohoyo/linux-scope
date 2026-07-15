@@ -1,4 +1,4 @@
-# linux-scope
+# linux-scope (Work in progress)
 A light-weight linux sniper scope with practical cool features.
 
 Features:
