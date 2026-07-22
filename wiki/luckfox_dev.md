@@ -160,6 +160,8 @@ Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-p
 ./build.sh clean kernel
 ./build.sh kernel
 
+sudo ./rkflash.sh update
+
 Revisar que salga TARGET_KERNEL_CONFIG=luckfox_rv1106_linux_defconfig 
 TARGET_KERNEL_DTS=rv1103g-luckfox-pico-mini.dts
  al compilar
