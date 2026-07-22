@@ -156,6 +156,10 @@ Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-p
 ./build.sh clean kernel
 ./build.sh kernel
 
+Revisar que salga TARGET_KERNEL_CONFIG=luckfox_rv1106_linux_defconfig 
+TARGET_KERNEL_DTS=rv1103g-luckfox-pico-mini.dts
+ al compilar
+
 
 ### Problems with CMake version
 Yo tenia instalado en mi Ubuntu22.04 cmake=4.4.0, eso daba conflicto con el SDK, que espera una version inferior.
