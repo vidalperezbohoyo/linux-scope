@@ -9,7 +9,11 @@ Clonar el repo en una carpeta siguiendo su guia de instalación.
 > Dudo que todavia funcione tal y como el indica de aplicar el parche, pero lo haremos manualmente a continuacion:
 
 El fichero donde añadir el **overlay** es:
-`sysdrv/source/kernel/arch/arm/boot/dts/rv1103g-luckfox-pico.dts`
+- `sysdrv/source/kernel/arch/arm/boot/dts/rv1103g-luckfox-pico.dts` Si es PICO a secas
+- `sysdrv/source/kernel/arch/arm/boot/dts/rv1103g-luckfox-pico-mini.dts` Si es PICO Mini
+- ...
+
+....................
 
 Tenemos que cambiar la sección del SPI de:
 ```
