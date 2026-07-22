@@ -162,6 +162,7 @@ Creo que es mejor tener muchos más fps, por encima de mas calidad/zoom y optico
 Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-pico/issues/67 para hacerlo antes de generar la imagen.
 
 1. Substituye `sc3336_CMK-OT2119-PC1_30IRC-F16.json` dela ruta `/luckfox-pico/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/` por `sc3336_CMK-OT2119-PC1_30IRC-F16.json`
+2. Poner el.ko en /oem/usr/ko/sc3336.ko (o hacerlo en compile time (tengo que investigar))
 
 ## Generar la imagen
 ./build.sh clean kernel
