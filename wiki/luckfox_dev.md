@@ -153,7 +153,8 @@ Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-p
 1. Substituye `sc3336_CMK-OT2119-PC1_30IRC-F16.json` dela ruta `/luckfox-pico/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/` por `sc3336_CMK-OT2119-PC1_30IRC-F16.json`
 
 ## Generar la imagen
-
+./build.sh clean kernel
+./build.sh kernel
 
 
 ### Problems with CMake version
