@@ -129,6 +129,7 @@ CONFIG_FB_TFT_ST7789V=y
 ```
 y lo dejamos como:
 ```
+CONFIG_FB=y
 CONFIG_FB_TFT=y
 CONFIG_FB_TFT_ILI9340=y
 ```
