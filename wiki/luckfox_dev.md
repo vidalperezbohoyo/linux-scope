@@ -37,6 +37,12 @@ A:
 	#address-cells = <1>;
 	#size-cells = <0>;
 
+	spidev@0 {
+        status = "disabled";
+    };
+
+	/delete-node/ fbtft@0;
+
 	gc9a01@0 {
 		compatible = "ilitek,ili9340";
 		reg = <0>;
