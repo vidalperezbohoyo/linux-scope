@@ -56,7 +56,7 @@ A:
 		width = <240>;
 		height = <240>;
 		rotate = <0>;
-		fps = <75>;
+		fps = <50>;
 		bgr;
 
 		init = <
