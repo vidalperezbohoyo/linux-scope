@@ -6,6 +6,7 @@
 #include "Utility/Thread.h"
 #include "Utility/Singleton.h"
 #include "Utility/Log.h"
+#include "Camera/V4L2Capture.h"
 
 class VideoProvider : public Thread, public Singleton<VideoProvider>
 {
@@ -24,7 +25,7 @@ private:
     VideoProvider();
 
 private:
-    cv::VideoCapture cap_;
+    V4L2Capture cap_;
 
     std::function<void(const cv::Mat&)> image_callback_;
 };

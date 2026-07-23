@@ -18,7 +18,7 @@ bool VideoProcessor::init()
     return VideoProvider::init();
 }
 
-void VideoProcessor::setImageCallback(std::function<void(const cv::Mat&)> callback)
+void VideoProceMatssor::setImageCallback(std::function<void(const cv::Mat&)> callback)
 {
     imageCallback_ = callback;
 }

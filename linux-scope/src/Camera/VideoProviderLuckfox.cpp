@@ -1,4 +1,4 @@
-#include "Camera/VideoProvider.h"
+#include "Camera/VideoProviderLuckfox.h"
 
 VideoProvider::VideoProvider()
 {
@@ -12,18 +12,15 @@ VideoProvider::~VideoProvider()
 void VideoProvider::loop()
 {   
     cv::Mat frame;
-    cap_ >> frame;
+    frame = cap_.read();
    
     if (!frame.empty() && image_callback_)
     {
-        Log::instance().info("FPS: {0}", cap_.get(cv::CAP_PROP_FPS));
         image_callback_(frame);
     }
     else
     {
-        Log::instance().error("aaaaaaaaaFailed to capture frame or image callback not set.");
-        this->stop();
-        exit(-1);
+        Log::instance().error("Failed to capture frame or image callback not set.");
     }
 }
 
@@ -31,7 +28,7 @@ bool VideoProvider::init()
 {
     Log::instance().info("Initializing VideoProvider...");
     cap_.release();
-    cap_.open(0);
+    cap_.open("/dev/video11", 640, 480);
     return cap_.isOpened();
 }
 

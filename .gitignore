@@ -1,4 +1,5 @@
 ./build/
 settings.json
+linux-scope/build/
 .vscode/
 *.log

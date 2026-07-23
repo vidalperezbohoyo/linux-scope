@@ -5,6 +5,10 @@
 #include "Display/BaseDisplay.h"
 #include "Utility/Singleton.h"
 
+// Debug
+#include <chrono>
+#include <iostream>
+
 class FbDisplay : public BaseDisplay, public Singleton<FbDisplay>
 {
 public:

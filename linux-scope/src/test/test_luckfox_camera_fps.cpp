@@ -17,9 +17,17 @@ int main()
         return -1;
     }
 
+    video_provider.start();
+
     video_provider.setImageCallback(
-        [last = std::chrono::steady_clock::now()](const cv::Mat&) mutable
+        [last = std::chrono::steady_clock::now()](const cv::Mat& mat) mutable
         {
+            if (mat.empty()) 
+            {
+                Log::instance().error("Received empty frame.");
+                exit(-1);
+            }
+
             auto now = std::chrono::steady_clock::now();
 
             double dt = std::chrono::duration<double>(now - last).count();

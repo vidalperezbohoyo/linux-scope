@@ -51,7 +51,9 @@ void FbDisplay::draw(const cv::Mat& frame)
     if (!framebuffer_)
         return;
 
-    cv::Mat resized;
+    auto t0 = std::chrono::steady_clock::now();
+    
+    static cv::Mat resized;
 
     if (frame.cols != static_cast<int>(vinfo_.xres) ||
         frame.rows != static_cast<int>(vinfo_.yres))
@@ -62,20 +64,39 @@ void FbDisplay::draw(const cv::Mat& frame)
             cv::Size(vinfo_.xres, vinfo_.yres),
             0,
             0,
-            cv::INTER_LINEAR);
+            cv::INTER_NEAREST);
     }
     else
     {
         resized = frame;
     }
+    auto t1 = std::chrono::steady_clock::now();
 
-    cv::Mat rgb565;
+    static cv::Mat rgb565;
     cv::cvtColor(resized, rgb565, cv::COLOR_BGR2BGR565);
 
+    auto t2 = std::chrono::steady_clock::now();
     const size_t bytes =
         rgb565.cols * rgb565.rows * 2;
 
     memcpy(framebuffer_, rgb565.data, bytes);
+
+    auto t3 = std::chrono::steady_clock::now();
+
+    std::cout
+    << "resize: "
+    << std::chrono::duration<double,std::milli>(t1-t0).count()
+    << " ms\n";
+
+    std::cout
+        << "cvtColor: "
+        << std::chrono::duration<double,std::milli>(t2-t1).count()
+        << " ms\n";
+
+    std::cout
+        << "memcpy: "
+        << std::chrono::duration<double,std::milli>(t3-t2).count()
+        << " ms\n";
 }
 
 void FbDisplay::clear()

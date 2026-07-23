@@ -54,6 +54,7 @@ if (BUILD_X86)
 elseif (BUILD_LUCKFOX_PICO)
     target_sources(scope PRIVATE
         src/Display/FbDisplay.cpp
+
     )
 
     add_executable(test_luckfox_display 
@@ -62,14 +63,21 @@ elseif (BUILD_LUCKFOX_PICO)
     )
     add_executable(test_luckfox_camera_fps
         src/test/test_luckfox_camera_fps.cpp
-        src/Camera/VideoProvider.cpp
         src/Utility/Thread.cpp
+        src/Camera/VideoProviderLuckfox.cpp
+        src/Camera/V4L2Capture.cpp
     )
     add_executable(test_luckfox_camera_to_display
         src/test/test_luckfox_camera_to_display.cpp
-        src/Camera/VideoProvider.cpp
         src/Display/FbDisplay.cpp
         src/Utility/Thread.cpp
+        src/Camera/VideoProviderLuckfox.cpp
+        src/Camera/V4L2Capture.cpp
+    )
+
+    add_executable(test_luckfox_v4l2_raw
+        src/test/test_luckfox_v4l2_raw.cpp
+        src/Display/FbDisplay.cpp
     )
 
     target_include_directories(test_luckfox_display PRIVATE 
@@ -84,10 +92,15 @@ elseif (BUILD_LUCKFOX_PICO)
         include
         ${OpenCV_INCLUDE_DIRS}
     )
+    target_include_directories(test_luckfox_v4l2_raw PRIVATE 
+        include
+        ${OpenCV_INCLUDE_DIRS}
+    )
 
     target_link_libraries(test_luckfox_display ${OpenCV_LIBS})
     target_link_libraries(test_luckfox_camera_fps ${OpenCV_LIBS})
     target_link_libraries(test_luckfox_camera_to_display ${OpenCV_LIBS})
+    target_link_libraries(test_luckfox_v4l2_raw ${OpenCV_LIBS})
 
 endif()
 
