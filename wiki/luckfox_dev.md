@@ -9,7 +9,11 @@ Clonar el repo en una carpeta siguiendo su guia de instalación.
 > Dudo que todavia funcione tal y como el indica de aplicar el parche, pero lo haremos manualmente a continuacion:
 
 El fichero donde añadir el **overlay** es:
-`sysdrv/source/kernel/arch/arm/boot/dts/rv1103g-luckfox-pico.dts`
+- `sysdrv/source/kernel/arch/arm/boot/dts/rv1103g-luckfox-pico.dts` Si es PICO a secas
+- `sysdrv/source/kernel/arch/arm/boot/dts/rv1103g-luckfox-pico-mini.dts` Si es PICO Mini
+- ...
+
+....................
 
 Tenemos que cambiar la sección del SPI de:
 ```
@@ -33,6 +37,12 @@ A:
 	#address-cells = <1>;
 	#size-cells = <0>;
 
+	spidev@0 {
+        status = "disabled";
+    };
+
+	/delete-node/ fbtft@0;
+
 	gc9a01@0 {
 		compatible = "ilitek,ili9340";
 		reg = <0>;
@@ -46,7 +56,7 @@ A:
 		width = <240>;
 		height = <240>;
 		rotate = <0>;
-		fps = <75>;
+		fps = <50>;
 		bgr;
 
 		init = <
@@ -119,6 +129,7 @@ CONFIG_FB_TFT_ST7789V=y
 ```
 y lo dejamos como:
 ```
+CONFIG_FB=y
 CONFIG_FB_TFT=y
 CONFIG_FB_TFT_ILI9340=y
 ```
@@ -151,9 +162,38 @@ Creo que es mejor tener muchos más fps, por encima de mas calidad/zoom y optico
 Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-pico/issues/67 para hacerlo antes de generar la imagen.
 
 1. Substituye `sc3336_CMK-OT2119-PC1_30IRC-F16.json` dela ruta `/luckfox-pico/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/` por `sc3336_CMK-OT2119-PC1_30IRC-F16.json`
+2. Poner el.ko en /oem/usr/ko/sc3336.ko (o hacerlo en compile time (tengo que investigar))
+
+La camara genera 640x480 V4L2 Multiplanar Bayer de 10 bits (RAW10)
+
+No es RAW10 empaquetado MIPI (que serían 384000 bytes).
+
+Tampoco es un CV_16UC1 normal (que serían 640×2 = 1280 bytes por línea y 614400 bytes).
+
+Lo que está haciendo el driver es alinear cada línea a 1024 bytes, es decir:
+
+640 píxeles
+↓
+
+1024 bytes por línea
+
+Eso significa que cada píxel ocupa realmente 10 bits empaquetados de una forma propietaria o semipaquetada con padding, y OpenCV no puede interpretar el buffer directamente.
+
+Por eso NO debes hacer:
+
+cv::Mat raw16(480,640,CV_16UC1,raw);
+
+porque el stride es incorrecto.
 
 ## Generar la imagen
+./build.sh clean kernel
+./build.sh kernel
 
+sudo ./rkflash.sh update
+
+Revisar que salga TARGET_KERNEL_CONFIG=luckfox_rv1106_linux_defconfig 
+TARGET_KERNEL_DTS=rv1103g-luckfox-pico-mini.dts
+ al compilar
 
 
 ### Problems with CMake version
