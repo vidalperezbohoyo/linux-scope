@@ -164,6 +164,27 @@ Para ello, me he basado en la config de https://github.com/LuckfoxTECH/luckfox-p
 1. Substituye `sc3336_CMK-OT2119-PC1_30IRC-F16.json` dela ruta `/luckfox-pico/media/isp/release_camera_engine_rkaiq_rv1106_arm-rockchip830-linux-uclibcgnueabihf/isp_iqfiles/` por `sc3336_CMK-OT2119-PC1_30IRC-F16.json`
 2. Poner el.ko en /oem/usr/ko/sc3336.ko (o hacerlo en compile time (tengo que investigar))
 
+La camara genera 640x480 V4L2 Multiplanar Bayer de 10 bits (RAW10)
+
+No es RAW10 empaquetado MIPI (que serían 384000 bytes).
+
+Tampoco es un CV_16UC1 normal (que serían 640×2 = 1280 bytes por línea y 614400 bytes).
+
+Lo que está haciendo el driver es alinear cada línea a 1024 bytes, es decir:
+
+640 píxeles
+↓
+
+1024 bytes por línea
+
+Eso significa que cada píxel ocupa realmente 10 bits empaquetados de una forma propietaria o semipaquetada con padding, y OpenCV no puede interpretar el buffer directamente.
+
+Por eso NO debes hacer:
+
+cv::Mat raw16(480,640,CV_16UC1,raw);
+
+porque el stride es incorrecto.
+
 ## Generar la imagen
 ./build.sh clean kernel
 ./build.sh kernel
