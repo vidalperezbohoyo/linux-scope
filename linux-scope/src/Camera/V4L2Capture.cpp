@@ -111,7 +111,7 @@ void V4L2Capture::open(const std::string& device, int width, int height)
 
 }
 
-cv::Mat& V4L2Capture::read()
+bool V4L2Capture::read(cv::Mat& image)
 {
 
     if (fd_ < 0)
@@ -130,24 +130,25 @@ cv::Mat& V4L2Capture::read()
     // Wait for a frame
     if (ioctl(fd_, VIDIOC_DQBUF, &buf) < 0)
     {
-        throw std::runtime_error("Failed to dequeue buffer");
+        Log::instance().error("[V4L2Capture::read] Failed to dequeue the buffer");
+        return false;
     }
 
     void* raw = buffers_[buf.index].start;
 
-    // NV12 -> OpenCV
-    cv::Mat nv12(
-        480 + 480 / 2,
-        640,
-        CV_8UC1,
-        raw);
-    
-    cv::cvtColor(nv12, frame_, cv::COLOR_YUV2BGR_NV12);
+    // Fast clone
+    const int rows = 480 + 480 / 2; // 720
+    const int cols = 640;
+    const size_t data_size = rows * cols * sizeof(uint8_t);
+
+    image.create(rows, cols, CV_8UC1);
+    std::memcpy(image.data, raw, data_size);
 
     // Requeue the buffer
     if (ioctl(fd_, VIDIOC_QBUF, &buf) < 0)
     {
-        throw std::runtime_error("Failed to requeue buffer");
+        Log::instance().error("[V4L2Capture::read] Failed to requeue the buffer");
+        return false;
     }
 
     // Debug
@@ -164,5 +165,5 @@ cv::Mat& V4L2Capture::read()
 
     std::cout << std::endl;
 
-    return frame_;
+    return true;
 }

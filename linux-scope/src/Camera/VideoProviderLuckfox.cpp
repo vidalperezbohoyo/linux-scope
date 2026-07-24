@@ -11,12 +11,13 @@ VideoProvider::~VideoProvider()
 
 void VideoProvider::loop()
 {   
-    cv::Mat frame;
-    frame = cap_.read();
+    static cv::Mat frame;
+
+    bool ret = cap_.read(frame);
    
-    if (!frame.empty() && image_callback_)
+    if (ret && image_callback_)
     {
-        image_callback_(frame);
+        image_callback_(frame); // As reference
     }
     else
     {

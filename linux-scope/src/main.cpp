@@ -9,22 +9,6 @@
 #include "Display/FbDisplay.h"
 #endif
 
-
-
-// void setNonBlockingInput(bool enable) {
-//     static struct termios oldt, newt;
-//     if (enable) {
-//         tcgetattr(STDIN_FILENO, &oldt);           
-//         newt = oldt;
-//         newt.c_lflag &= ~(ICANON | ECHO);         
-//         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-
-//         fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
-//     } else {
-//         tcsetattr(STDIN_FILENO, TCSANOW, &oldt); 
-//     }
-// }
-
 int main() 
 {
     Log::instance().set_level(Log::Level::Debug);

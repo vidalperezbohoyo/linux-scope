@@ -58,13 +58,20 @@ void FbDisplay::draw(const cv::Mat& frame)
     if (frame.cols != static_cast<int>(vinfo_.xres) ||
         frame.rows != static_cast<int>(vinfo_.yres))
     {
-        cv::resize(
-            frame,
-            resized,
-            cv::Size(vinfo_.xres, vinfo_.yres),
-            0,
-            0,
-            cv::INTER_NEAREST);
+        // cv::resize(
+        //     frame,
+        //     resized,
+        //     cv::Size(vinfo_.xres, vinfo_.yres),
+        //     0,
+        //     0,
+        //     cv::INTER_NEAREST);
+
+        // Crop to 240x240
+        int crop_size = 240;
+        int x_offset = (frame.cols - crop_size) / 2;
+        int y_offset = (frame.rows - crop_size) / 2;
+        cv::Rect roi(x_offset, y_offset, crop_size, crop_size);
+        resized = frame(roi);
     }
     else
     {

@@ -30,6 +30,33 @@ elseif(BUILD_LUCKFOX_PICO)
 
     set(OpenCV_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/opencv-mobile-4.10.0-luckfox-pico/lib/cmake/opencv4")
 
+    #############################################################
+    # RGA (Rockchip Raster Graphic Acceleration) para conversion
+    # de color por hardware (usado en V4L2Capture.cpp)
+    #############################################################
+   
+    set(RGA_PATH "${SDK_PATH}/media/rga/release_rga_rv1106_arm-rockchip830-linux-uclibcgnueabihf" CACHE PATH "Path to librga")
+
+    find_path(RGA_INCLUDE_DIR
+        NAMES rga/im2d.hpp
+        PATHS ${RGA_PATH}/include
+        NO_DEFAULT_PATH
+    )
+
+    find_library(RGA_LIBRARY
+        NAMES rga
+        PATHS ${RGA_PATH}/lib
+        NO_DEFAULT_PATH
+    )
+
+    if (NOT RGA_INCLUDE_DIR OR NOT RGA_LIBRARY)
+        message(FATAL_ERROR "librga not found. Set RGA_PATH to the correct location "
+                             "(expected headers in <RGA_PATH>/include/rga and lib in <RGA_PATH>/lib).")
+    endif()
+
+    message(STATUS "Found RGA include dir: ${RGA_INCLUDE_DIR}")
+    message(STATUS "Found RGA library: ${RGA_LIBRARY}")
+
 else()
     message(FATAL_ERROR "No build target specified. Please set BUILD_X86 or BUILD_LUCKFOX_PICO.")
 endif()
@@ -67,9 +94,10 @@ elseif (BUILD_LUCKFOX_PICO)
         src/Camera/VideoProviderLuckfox.cpp
         src/Camera/V4L2Capture.cpp
     )
-    add_executable(test_luckfox_camera_to_display
-        src/test/test_luckfox_camera_to_display.cpp
+    add_executable(test_luckfox_camera_to_display_manager
+        src/test/test_luckfox_camera_to_display_manager.cpp
         src/Display/FbDisplay.cpp
+        src/Display/DisplayManager.cpp
         src/Utility/Thread.cpp
         src/Camera/VideoProviderLuckfox.cpp
         src/Camera/V4L2Capture.cpp
@@ -87,20 +115,23 @@ elseif (BUILD_LUCKFOX_PICO)
     target_include_directories(test_luckfox_camera_fps PRIVATE 
         include
         ${OpenCV_INCLUDE_DIRS}
+        ${RGA_INCLUDE_DIR}
     )
-    target_include_directories(test_luckfox_camera_to_display PRIVATE 
+    target_include_directories(test_luckfox_camera_to_display_manager PRIVATE 
         include
         ${OpenCV_INCLUDE_DIRS}
+        ${RGA_INCLUDE_DIR}
     )
     target_include_directories(test_luckfox_v4l2_raw PRIVATE 
         include
         ${OpenCV_INCLUDE_DIRS}
+        ${RGA_INCLUDE_DIR}
     )
 
     target_link_libraries(test_luckfox_display ${OpenCV_LIBS})
-    target_link_libraries(test_luckfox_camera_fps ${OpenCV_LIBS})
-    target_link_libraries(test_luckfox_camera_to_display ${OpenCV_LIBS})
-    target_link_libraries(test_luckfox_v4l2_raw ${OpenCV_LIBS})
+    target_link_libraries(test_luckfox_camera_fps ${OpenCV_LIBS} ${RGA_LIBRARY})
+    target_link_libraries(test_luckfox_camera_to_display_manager ${OpenCV_LIBS} ${RGA_LIBRARY})
+    target_link_libraries(test_luckfox_v4l2_raw ${OpenCV_LIBS} ${RGA_LIBRARY})
 
 endif()
 

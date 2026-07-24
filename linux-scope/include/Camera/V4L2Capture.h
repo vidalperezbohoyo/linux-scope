@@ -24,7 +24,7 @@ public:
     void open(const std::string& device, int width, int height);
     void release();
 
-    cv::Mat& read();
+    bool read(cv::Mat& image);
 
     bool isOpened() const { return fd_ >= 0; }
 
@@ -37,7 +37,6 @@ private:
 
     int fd_;
     std::vector<Buffer> buffers_;
-    cv::Mat frame_;
 
     // Debug
     std::chrono::steady_clock::time_point last_frame_time_ = std::chrono::steady_clock::now();
