@@ -51,36 +51,11 @@ void FbDisplay::draw(const cv::Mat& frame)
     if (!framebuffer_)
         return;
 
-    auto t0 = std::chrono::steady_clock::now();
-    
-    static cv::Mat resized;
-
-    if (frame.cols != static_cast<int>(vinfo_.xres) ||
-        frame.rows != static_cast<int>(vinfo_.yres))
-    {
-        // cv::resize(
-        //     frame,
-        //     resized,
-        //     cv::Size(vinfo_.xres, vinfo_.yres),
-        //     0,
-        //     0,
-        //     cv::INTER_NEAREST);
-
-        // Crop to 240x240
-        int crop_size = 240;
-        int x_offset = (frame.cols - crop_size) / 2;
-        int y_offset = (frame.rows - crop_size) / 2;
-        cv::Rect roi(x_offset, y_offset, crop_size, crop_size);
-        resized = frame(roi);
-    }
-    else
-    {
-        resized = frame;
-    }
     auto t1 = std::chrono::steady_clock::now();
 
     static cv::Mat rgb565;
-    cv::cvtColor(resized, rgb565, cv::COLOR_BGR2BGR565);
+    cv::rotate(frame, frame, cv::ROTATE_180);
+    cv::cvtColor(frame, rgb565, cv::COLOR_BGR2BGR565);
 
     auto t2 = std::chrono::steady_clock::now();
     const size_t bytes =
@@ -89,11 +64,6 @@ void FbDisplay::draw(const cv::Mat& frame)
     memcpy(framebuffer_, rgb565.data, bytes);
 
     auto t3 = std::chrono::steady_clock::now();
-
-    std::cout
-    << "resize: "
-    << std::chrono::duration<double,std::milli>(t1-t0).count()
-    << " ms\n";
 
     std::cout
         << "cvtColor: "

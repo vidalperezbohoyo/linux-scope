@@ -33,6 +33,7 @@ public:
 
 private:
 
+cv::Mat zoomOptimal(const cv::Mat& src, float zoom_factor);
 
 private:
     cv::Mat latest_camera_image_;

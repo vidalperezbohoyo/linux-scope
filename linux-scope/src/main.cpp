@@ -1,6 +1,5 @@
 #include "Camera/VideoProvider.h"
 #include "UserInput/KeyboardController.h"
-#include "Display/HUD.h"
 #include "Utility/Log.h"
 
 #if defined(BUILD_X86)
