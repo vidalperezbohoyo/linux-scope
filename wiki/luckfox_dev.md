@@ -216,7 +216,7 @@ cmake --version
 ### This is a program that raises and prepare camera at start but uses the camera so must be killed
 killall rkipc
 
-### ISP Design
+### AutoExposure ISP Design
 [root@luckfox root]# v4l2-ctl -d /dev/v4l-subdev2 --list-ctrls
 
 User Controls
@@ -245,6 +245,7 @@ Es mejor aumentar exposure antes que ganancia, luego usaremos la ganancia para g
 Algoritmo (cada segundo):
 - Elegir un ROI
 - Calcular percentiles
+
 - Formula ponderada para pasar de percentil a exposicion, si el valor es mas que lo que se queire se mete ganancia
 
 
