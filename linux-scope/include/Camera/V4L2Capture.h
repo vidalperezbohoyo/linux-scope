@@ -13,6 +13,7 @@
 #include <chrono>
 
 #include "Utility/Log.h"
+#include "Camera/AutoExposure.h"
 
 class V4L2Capture
 {

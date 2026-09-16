@@ -16,7 +16,7 @@ void VideoProvider::loop()
    
     if (!frame.empty() && image_callback_)
     {
-        Log::instance().info("FPS: {0}", cap_.get(cv::CAP_PROP_FPS));
+        cv::flip(frame, frame, 1);
         image_callback_(frame);
     }
     else
@@ -31,7 +31,12 @@ bool VideoProvider::init()
 {
     Log::instance().info("Initializing VideoProvider...");
     cap_.release();
-    cap_.open(0);
+    cap_.open(0, cv::CAP_V4L2);
+    cap_.set(cv::CAP_PROP_FOURCC,
+            cv::VideoWriter::fourcc('M','J','P','G'));
+    cap_.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+    cap_.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+    cap_.set(cv::CAP_PROP_FPS, 30);
     return cap_.isOpened();
 }
 

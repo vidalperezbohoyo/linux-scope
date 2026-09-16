@@ -3,6 +3,8 @@
 V4L2Capture::V4L2Capture() : fd_(-1)
 {
     Log::instance().info("V4L2Capture initialized");
+
+    AutoExposure::instance().init();
 }
 
 V4L2Capture::~V4L2Capture()
@@ -150,6 +152,9 @@ bool V4L2Capture::read(cv::Mat& image)
         Log::instance().error("[V4L2Capture::read] Failed to requeue the buffer");
         return false;
     }
+
+    // Perform auto exposure adjustment
+    AutoExposure::instance().devour(raw);
 
     // Debug
     auto now = std::chrono::steady_clock::now();

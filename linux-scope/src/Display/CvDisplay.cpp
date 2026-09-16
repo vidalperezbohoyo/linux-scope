@@ -19,8 +19,19 @@ bool CvDisplay::init()
 void CvDisplay::draw(const cv::Mat& frame)
 {
     if (frame.empty()) return;
+    
+    cv::Mat result = cv::Mat::zeros(frame.size(), frame.type());
+    cv::Mat mask = cv::Mat::zeros(frame.size(), CV_8UC1);
 
-    cv::imshow("Video", frame);
+    cv::Point center(frame.cols / 2, frame.rows / 2);
+    int radius = std::min(frame.cols, frame.rows) / 2;
+
+    cv::circle(mask, center, radius, cv::Scalar(255), cv::FILLED);
+
+    // Copia únicamente la zona del círculo
+    frame.copyTo(result, mask);
+
+    cv::imshow("Video", result);
     cv::waitKey(1);
 }
 

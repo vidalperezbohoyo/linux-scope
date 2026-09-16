@@ -66,22 +66,23 @@ find_package(OpenCV REQUIRED)
 
 add_executable(scope 
     src/main.cpp
-    
-    src/Camera/VideoProvider.cpp
-
     src/UserInput/KeyboardController.cpp
-    
     src/Utility/Thread.cpp
+    src/Display/DisplayManager.cpp
+
 )
 
 if (BUILD_X86)
     target_sources(scope PRIVATE
         src/Display/CvDisplay.cpp
+        src/Camera/VideoProvider.cpp
     )
 elseif (BUILD_LUCKFOX_PICO)
     target_sources(scope PRIVATE
         src/Display/FbDisplay.cpp
-
+        src/Camera/VideoProviderLuckfox.cpp
+        src/Camera/V4L2Capture.cpp
+        src/Camera/AutoExposure.cpp
     )
 
     add_executable(test_luckfox_display 
@@ -93,6 +94,7 @@ elseif (BUILD_LUCKFOX_PICO)
         src/Utility/Thread.cpp
         src/Camera/VideoProviderLuckfox.cpp
         src/Camera/V4L2Capture.cpp
+        src/Camera/AutoExposure.cpp
     )
     add_executable(test_luckfox_camera_to_display_manager
         src/test/test_luckfox_camera_to_display_manager.cpp
@@ -101,6 +103,7 @@ elseif (BUILD_LUCKFOX_PICO)
         src/Utility/Thread.cpp
         src/Camera/VideoProviderLuckfox.cpp
         src/Camera/V4L2Capture.cpp
+        src/Camera/AutoExposure.cpp
     )
 
     add_executable(test_luckfox_v4l2_raw

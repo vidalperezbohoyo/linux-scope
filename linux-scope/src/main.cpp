@@ -1,32 +1,48 @@
-#include "Camera/VideoProvider.h"
+#include "Display/DisplayManager.h"
 #include "UserInput/KeyboardController.h"
 #include "Utility/Log.h"
 
 #if defined(BUILD_X86)
 #include "Display/CvDisplay.h"
+#include "Camera/VideoProvider.h"
 #elif defined(BUILD_LUCKFOX_PICO)
 #include "Display/FbDisplay.h"
+#include "Camera/VideoProviderLuckfox.h"
 #endif
+
 
 int main() 
 {
     Log::instance().set_level(Log::Level::Debug);
 
-#if defined(BUILD_X86)
-    auto& display = CvDisplay::instance();
-#elif defined(BUILD_LUCKFOX_PICO)
-    auto& display = FbDisplay::instance();
-#endif
-
-    if (!display.init()) 
+    auto& video_provider = VideoProvider::instance();
+    auto& display_manager = DisplayManager::instance();
+   
+    if (!video_provider.init()) 
     {
-        Log::instance().error("Failed to initialize display.");
+        Log::instance().error("Failed to initialize video provider.");
         return -1;
     }
 
-    // Example draw green screen
-    cv::Mat greenScreen(240, 240, CV_8UC3, cv::Scalar(0, 255, 0));
-    display.draw(greenScreen);
+    if (!display_manager.init()) 
+    {
+        Log::instance().error("Failed to initialize video provider.");
+        return -1;
+    }
+
+    video_provider.start();
+    display_manager.start();
+
+    video_provider.setImageCallback([&display_manager](const cv::Mat& image) {
+        display_manager.setCameraImage(image);
+    });
+    
+    while(1)
+    {
+        usleep(100000); // Sleep for 100ms
+    }
 
     return 0;
 }
+
+

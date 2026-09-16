@@ -46,7 +46,9 @@ void DisplayManager::loop()
     Log::instance().debug("[DisplayManager::loop] Received new camera image, processing...");
 
     // 1. Image is on NV12 format, convert to BGR
-    cv::cvtColor(latest_camera_image_, latest_camera_image_, cv::COLOR_YUV2BGR_NV12);
+    #if defined(BUILD_LUCKFOX_PICO)
+        cv::cvtColor(latest_camera_image_, latest_camera_image_, cv::COLOR_YUV2BGR_NV12);
+    #endif
 
     // 2. ROI Crop
     int crop_size = 240;
@@ -57,9 +59,13 @@ void DisplayManager::loop()
     cv::Mat crop = latest_camera_image_(roi).clone(); // Copy...
 
 
-    crop = zoomOptimal(crop, 5);
-
+    // crop = zoomOptimal(crop, 5);
+    /*
     // 3. Crosshair
+    cv::line(crop, cv::Point(crop.rows / 2, 0), cv::Point(crop.rows / 2, crop.cols), cv::Scalar(0,0,0), 2);
+    cv::line(crop, cv::Point(0, crop.cols / 2), cv::Point(crop.rows, crop.cols / 2), cv::Scalar(0,0,0), 2);
+
+
     cv::line(crop, cv::Point(crop.rows / 2, 0), cv::Point(crop.rows / 2, crop.cols), cv::Scalar(0,255,0));
     cv::line(crop, cv::Point(0, crop.cols / 2), cv::Point(crop.rows, crop.cols / 2), cv::Scalar(0,255,0));
 
@@ -67,27 +73,66 @@ void DisplayManager::loop()
     cv::putText(
         crop, 
         "23m", 
-        cv::Point(210, 120), 
+        cv::Point(205, 118), 
         cv::FONT_HERSHEY_PLAIN, 
-        1.2,                       // Escala más razonable (ajusta si es necesario)
-        cv::Scalar(0, 255, 0),       // Negro (BGR)
+        1,                       // Escala más razonable (ajusta si es necesario)
+        cv::Scalar(0, 0, 0),       // Negro (BGR)
         2,                         // Grosor proporcional a la escala
-        cv::LINE_AA                // Suavizado de bordes (¡clave para evitar el bug visual!)
+        cv::LINE_8                // Suavizado de bordes (¡clave para evitar el bug visual!)
+    );
+
+        cv::putText(
+        crop, 
+        "23m", 
+        cv::Point(205, 118), 
+        cv::FONT_HERSHEY_PLAIN, 
+        1,                       // Escala más razonable (ajusta si es necesario)
+        cv::Scalar(0, 255, 0),       // Negro (BGR)
+        1,                         // Grosor proporcional a la escala
+        cv::LINE_8                // Suavizado de bordes (¡clave para evitar el bug visual!)
     );
 
     cv::putText(
         crop, 
         "2x", 
-        cv::Point(2, 120), 
+        cv::Point(2, 118), 
         cv::FONT_HERSHEY_PLAIN, 
-        1.2,                       // Escala más razonable (ajusta si es necesario)
-        cv::Scalar(0, 255, 0),       // Negro (BGR)
+        1,                       // Escala más razonable (ajusta si es necesario)
+        cv::Scalar(0, 0, 0),       // Negro (BGR)
         2,                         // Grosor proporcional a la escala
-        cv::LINE_AA                // Suavizado de bordes (¡clave para evitar el bug visual!)
+        cv::LINE_8                // Suavizado de bordes (¡clave para evitar el bug visual!)
     );
 
+        cv::putText(
+        crop, 
+        "2x", 
+        cv::Point(2, 118), 
+        cv::FONT_HERSHEY_PLAIN, 
+        1,                       // Escala más razonable (ajusta si es necesario)
+        cv::Scalar(0, 255, 0),       // Negro (BGR)
+        1,                         // Grosor proporcional a la escala
+        cv::LINE_8                // Suavizado de bordes (¡clave para evitar el bug visual!)
+    );
+    */
+    cv::putText(
+        crop, 
+        "CALIBRATION", 
+        cv::Point(70, 40), 
+        cv::FONT_HERSHEY_PLAIN, 
+        1,                       // Escala más razonable (ajusta si es necesario)
+        cv::Scalar(255, 0, 0),       // Negro (BGR)
+        2,                         // Grosor proporcional a la escala
+        cv::LINE_8                // Suavizado de bordes (¡clave para evitar el bug visual!)
+    );
+
+    cv::circle(crop, cv::Point(120, 120), 2, cv::Scalar(255, 0, 0), -1);
+
     // Finally: Show
-    FbDisplay::instance().draw(crop);
+    #if defined(BUILD_X86)
+        CvDisplay::instance().draw(crop);
+    #elif defined(BUILD_LUCKFOX_PICO)
+        FbDisplay::instance().draw(crop);
+    #endif
     latest_camera_image_ready_ = false;
 
 }
