@@ -215,3 +215,37 @@ cmake --version
 
 ### This is a program that raises and prepare camera at start but uses the camera so must be killed
 killall rkipc
+
+### ISP Design
+[root@luckfox root]# v4l2-ctl -d /dev/v4l-subdev2 --list-ctrls
+
+User Controls
+
+                       exposure 0x00980911 (int)    : min=1 max=536 step=1 default=70 value=30
+                horizontal_flip 0x00980914 (bool)   : default=0 value=0
+                  vertical_flip 0x00980915 (bool)   : default=0 value=0
+
+Image Source Controls
+
+              vertical_blanking 0x009e0901 (int)    : min=64 max=32287 step=1 default=64 value=64
+            horizontal_blanking 0x009e0902 (int)    : min=2160 max=2160 step=1 default=2160 value=2160 flags=read-only
+                  analogue_gain 0x009e0903 (int)    : min=128 max=99614 step=1 default=128 value=128
+
+Image Processing Controls
+
+                 link_frequency 0x009f0901 (intmenu): min=0 max=1 default=0 value=1 (255000000 0xf32fdc0) flags=read-only
+                     pixel_rate 0x009f0902 (int64)  : min=0 max=102000000 step=1 default=102000000 value=102000000 flags=read-only
+                   test_pattern 0x009f0903 (menu)   : min=0 max=4 default=0 value=0 (Disabled)
+
+Así que podemos tocar: "exposure" (1-536) y "analogue_gain" (128-99614)
+- Aumentar exposure, aumenta el tiempo de exposición y capta mas luz, pero puede meter motion blur
+- Aumentar ganancia multiplica la luminosidad de los pixeles, pero mete mucho ruido
+Es mejor aumentar exposure antes que ganancia, luego usaremos la ganancia para ganar mas luminosidad a costa del ruido
+
+Algoritmo (cada segundo):
+- Elegir un ROI
+- Calcular percentiles
+- Formula ponderada para pasar de percentil a exposicion, si el valor es mas que lo que se queire se mete ganancia
+
+
+				   
